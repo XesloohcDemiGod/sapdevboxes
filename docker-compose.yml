@@ -1,0 +1,156 @@
+# AS ABAP 7.52 SP04 Developer Edition - Docker Compose
+# 
+# Quick bootstrap for SAP ABAP development environment
+# Based on: https://community.sap.com/t5/application-development-and-automation-blog-posts/as-abap-7-52-sp04-developer-edition-concise-installation-guide
+#
+# Usage:
+#   docker-compose up -d
+#   docker-compose exec abap-server bash
+#
+
+version: '3.8'
+
+services:
+  abap-server:
+    image: opensuse/leap:15.5
+    container_name: sap-abap-752-sp04
+    hostname: vhcalnplci
+    domainname: local
+    ports:
+      - "3200:3200"   # ABAP GUI port (HTTP)
+      - "3201:3201"   # ABAP GUI port (secure)
+      - "3300:3300"   # ABAP message server
+      - "3301:3301"   # SAP Router
+      - "8000:8000"   # Web services
+    
+    environment:
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+      SAP_SYSTEM: NPL
+      SAP_INSTANCE: 00
+      MASTER_PASSWORD: Appl1ance123  # Must be changed in production
+      
+    volumes:
+      # Data persistence - critical for SAP installation
+      - sapmnt:/sapmnt
+      - sybase:/sybase
+      - usrsap:/usr/sap
+      
+      # For accessing SAP installation artifacts from host
+      - ./downloads:/home/downloads:ro
+      - ./scripts:/home/scripts:ro
+    
+    # Increase ulimits for SAP requirements
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 65536
+      nproc:
+        soft: 32768
+        hard: 65536
+    
+    # Resource allocation
+    mem_limit: 8g
+    memswap_limit: 16g
+    cpus: 4.0
+    
+    sysctls:
+      # SAP kernel parameters
+      kernel.shmmax: 1099511627776     # 1 TB
+      kernel.shmall: 268435456          # 1 TB in pages
+      kernel.shmmni: 4096
+      kernel.sem: "1250 256000 100 4096"
+      net.ipv4.ip_local_port_range: "1024 65535"
+      net.core.somaxconn: 1024
+      vm.max_map_count: 2097152
+      vm.swappiness: 10
+    
+    # Keep container running
+    stdin_open: true
+    tty: true
+    
+    # Network settings
+    networks:
+      - abap-network
+    
+    # Init script to prepare the system
+    entrypoint: ["/bin/bash"]
+    command:
+      - -c
+      - |
+        #!/bin/bash
+        set -e
+        
+        echo "[SAP ABAP Docker] Starting initialization..."
+        
+        # Update system
+        zypper refresh
+        zypper install -y \
+          csh libaio uuid-runtime samba openssh-clients openssh-server \
+          uuidd kernel-devel gcc make \
+          libstdc++6 libxcb1 libx11-6 \
+          net-tools htop vim wget curl \
+          sudo man-pages
+        
+        # Configure uuidd service
+        mkdir -p /var/run/uuidd
+        chown uuidd:uuidd /var/run/uuidd
+        systemctl enable uuidd || true
+        systemctl start uuidd || true
+        
+        # Create SAP system user groups
+        groupadd -r sapsys 2>/dev/null || true
+        
+        # Configure system limits
+        echo "* soft nofile 32768" >> /etc/security/limits.conf
+        echo "* hard nofile 65536" >> /etc/security/limits.conf
+        echo "* soft nproc 32768" >> /etc/security/limits.conf
+        echo "* hard nproc 65536" >> /etc/security/limits.conf
+        
+        # Hostname configuration
+        echo "127.0.0.1   localhost" > /etc/hosts
+        echo "::1         localhost" >> /etc/hosts
+        echo "127.0.0.1   vhcalnplci vhcalnplci.local" >> /etc/hosts
+        
+        # Create SAP directories if not exists
+        mkdir -p /sapmnt /sybase /usr/sap
+        chmod 755 /sapmnt /sybase /usr/sap
+        
+        # Welcome message
+        cat << 'EOF'
+================================================================================
+  SAP NetWeaver AS ABAP 7.52 SP04 Developer Edition - Docker Container
+================================================================================
+
+To install AS ABAP 7.52 SP04:
+
+  1. Extract the SAP installation archive to ./downloads/
+  2. In the container, run:
+     cd /home/downloads
+     sudo ./install.sh
+  
+  3. Follow the SAP installation prompts
+  4. After installation, access the system:
+     - GUI Port: localhost:3200
+     - Default User (client 000): SAP* / Down1oad
+     - Default User (client 001): DEVELOPER / Down1oad
+
+ Documentation: See README.md for detailed instructions
+
+================================================================================
+EOF
+        
+        # Keep container running
+        tail -f /dev/null
+
+volumes:
+  sapmnt:
+    driver: local
+  sybase:
+    driver: local
+  usrsap:
+    driver: local
+
+networks:
+  abap-network:
+    driver: bridge
