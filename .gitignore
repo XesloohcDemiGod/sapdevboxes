@@ -1,0 +1,66 @@
+# IDE and editors
+.vscode/
+.idea/
+.code-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Docker build context
+.docker/
+
+# OS files
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# SAP specific files to ignore
+*.sca
+*.jar
+*.war
+.landscape
+.pytest_cache/
+
+# macOS
+.AppleDouble
+.DS_Store
+._.DS_Store
+**/.DS_Store
+
+# Windows
+desktop.ini
