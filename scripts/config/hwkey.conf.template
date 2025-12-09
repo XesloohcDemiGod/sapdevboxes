@@ -1,0 +1,201 @@
+# ============================================================================
+# SAP ABAP Hardware Key Configuration Template
+# ============================================================================
+# This file contains the configuration parameters for SAP ABAP hardware key
+# generation, installation, and management. Copy this file to hwkey.conf
+# and customize the values for your environment.
+#
+# Generated: $(date)
+# Version: 1.0
+# ============================================================================
+
+# ============================================================================
+# 1. SYSTEM IDENTIFICATION
+# ============================================================================
+
+# SAP System ID (SID) - typically 3 characters (e.g., NPL, DEV, PRD)
+SID=NPL
+
+# System Instance Number (00-99)
+SYSTEM_NUMBER=00
+
+# System Hostname or container name
+HOST_NAME=sapdevboxes
+
+# System IP Address or localhost
+IP_ADDRESS=localhost
+
+# System Type (ABAP, JAVA, or ABAP+JAVA)
+SYSTEM_TYPE=ABAP
+
+# ============================================================================
+# 2. DATABASE CONFIGURATION
+# ============================================================================
+
+# Database System ID (for multi-system installations)
+DB_SID=NPL
+
+# Database User (SAP system administrator)
+DATABASE_USER=sapadm
+
+# Database Host
+DB_HOST=localhost
+
+# Database Port (default SAP DB ports: Oracle=1521, HANA=39013, MSSQL=1433)
+DB_PORT=39013
+
+# Database Connection String (leave empty to auto-generate)
+DB_CONNECT_STRING=
+
+# ============================================================================
+# 3. SAP ABAP KERNEL INFORMATION
+# ============================================================================
+
+# SAP Kernel Release (e.g., 785.1, 790.1)
+KERNEL_RELEASE=785.1
+
+# SAP Component
+COMPONENT=SAP_ABA
+
+# Support Package Level
+SP_LEVEL=00
+
+# Database Interface (ORACLE, HANADB, MSSQL)
+DBI=HANADB
+
+# ============================================================================
+# 4. LICENSE KEY PATHS
+# ============================================================================
+
+# Primary license key installation directory
+LICENSE_KEY_PATH=/usr/sap/npl/SYS/etc/license
+
+# License key filename
+LICENSE_KEY_FILE=hwkey.sap
+
+# Backup location for license keys
+BACKUP_KEY_PATH=/usr/sap/npl/backup/license
+
+# License key archive directory (for retention)
+ARCHIVE_KEY_PATH=/usr/sap/npl/archive/license
+
+# ============================================================================
+# 5. HARDWARE KEY GENERATION SETTINGS
+# ============================================================================
+
+# Enable hardware key encryption
+ENCRYPTED_KEY=false
+
+# Hardware key format (SAP_STANDARD or CUSTOM)
+HWKEY_FORMAT=SAP_STANDARD
+
+# Key generation algorithm (SHA256, SHA512)
+KEY_ALGORITHM=SHA256
+
+# Include system UUID in key generation
+INCLUDE_UUID=true
+
+# Include MAC address in key generation
+INCLUDE_MAC_ADDRESS=true
+
+# Include processor count in key
+INCLUDE_CPU_COUNT=true
+
+# ============================================================================
+# 6. AUTOMATIC LICENSE RENEWAL
+# ============================================================================
+
+# Enable automatic hardware key renewal
+AUTO_RENEW=true
+
+# Number of days before expiry to trigger renewal
+RENEW_BEFORE_EXPIRY_DAYS=30
+
+# Maximum automatic renewal retries
+MAX_RETRIES=3
+
+# Retry interval in seconds
+RETRY_INTERVAL_SECONDS=10
+
+# Enable renewal notifications
+ENABLE_NOTIFICATIONS=true
+
+# Notification recipients (comma-separated emails)
+NOTIFICATION_RECIPIENTS=admin@example.com
+
+# ============================================================================
+# 7. DOCKER CONTAINER SETTINGS
+# ============================================================================
+
+# Docker container name
+CONTAINER_NAME=abap-server
+
+# Docker container registry
+CONTAINER_REGISTRY=localhost
+
+# Copy key to container automatically
+AUTO_COPY_TO_CONTAINER=true
+
+# Container license directory
+CONTAINER_LICENSE_PATH=/usr/sap/npl/SYS/etc/license
+
+# Set permissions after key copy (chmod value)
+KEY_FILE_PERMISSIONS=600
+
+# ============================================================================
+# 8. LOGGING AND MONITORING
+# ============================================================================
+
+# Log directory
+LOG_DIR=/var/log/sap/hwkey
+
+# Log filename
+LOG_FILE=hwkey-setup.log
+
+# Log level (DEBUG, INFO, WARN, ERROR)
+LOG_LEVEL=INFO
+
+# Enable detailed logging
+DETAILED_LOGGING=false
+
+# Log rotation (days)
+LOG_RETENTION_DAYS=30
+
+# ============================================================================
+# 9. VALIDATION AND COMPLIANCE
+# ============================================================================
+
+# Validate hardware key after generation
+VALIDATE_AFTER_GENERATION=true
+
+# Verify key installation
+VERIFY_INSTALLATION=true
+
+# Check system prerequisites before installation
+CHECK_PREREQUISITES=true
+
+# Enable security scanning
+ENABLE_SECURITY_CHECK=true
+
+# ============================================================================
+# 10. INTEGRATION WITH INSTALL SCRIPT
+# ============================================================================
+
+# Run hardware key setup during installation
+AUTO_SETUP_HWKEY_ON_INSTALL=true
+
+# Skip hardware key if already present
+SKIP_IF_EXISTS=true
+
+# Force key regeneration even if present
+FORCE_REGENERATE=false
+
+# ============================================================================
+# USAGE
+# ============================================================================
+# 1. Copy this file: cp config/hwkey.conf.template config/hwkey.conf
+# 2. Edit config/hwkey.conf with your environment values
+# 3. Run setup: ./scripts/setup-hwkey.sh generate
+# 4. Install: ./scripts/setup-hwkey.sh install
+# 5. Verify: ./scripts/setup-hwkey.sh verify
+# ============================================================================
