@@ -1,0 +1,72 @@
+# Docker build artifacts
+.dockerignore
+Dockerfile
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Version control
+.hg
+.svn
+.bzr
+_darcs
+
+# Documentation
+*.md
+!README.md
+LICENSE
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Development files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+.env
+.env.local
+
+# Node/npm (if applicable)
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+.venv
+venv
+env
+
+# Build artifacts
+*.tar
+*.tar.gz
+*.zip
+*.rar
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# OS specific
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# IDE configuration
+.settings
+.project
+.classpath
+*.iml
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
